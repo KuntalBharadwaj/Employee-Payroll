@@ -14,7 +14,7 @@ public class Employee {
     private String name;
     private double salary;
 
-    public Employee(int employeeid, EmployeeDTO employeeDTO) {
+    public Employee(EmployeeDTO employeeDTO) {
         this.employeeid = employeeid;
         this.name = employeeDTO.getName();
         this.salary = employeeDTO.getSalary();

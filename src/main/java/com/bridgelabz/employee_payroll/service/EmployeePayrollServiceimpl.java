@@ -2,6 +2,8 @@ package com.bridgelabz.employee_payroll.service;
 
 import com.bridgelabz.employee_payroll.dto.EmployeeDTO;
 import com.bridgelabz.employee_payroll.model.Employee;
+import com.bridgelabz.employee_payroll.repository.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -13,18 +15,22 @@ public class EmployeePayrollServiceimpl implements IEmployeePayrollService {
 
     private List<Employee> employees = new ArrayList<>();
 
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
     @Override
     public List<Employee> getEmployeePayrollData() {
-        return employees;
+        return employeeRepository.findAll();
     }
 
     public Employee getEmployeePayrollDataById(int empId) {
-        return employees.get(empId-1);
+        return employeeRepository.findById(empId).get();
     }
 
     public Employee createEmployeePayrollData(EmployeeDTO empPayrollDTO) {
-        Employee employee = new Employee(employees.size()+1,empPayrollDTO);
-        employees.add(employee);
+        Employee employee = null;
+        employee = new Employee(empPayrollDTO);
+        employeeRepository.save(employee);
         return employee;
     }
 
@@ -32,12 +38,12 @@ public class EmployeePayrollServiceimpl implements IEmployeePayrollService {
         Employee empData = this.getEmployeePayrollDataById(empId);
         empData.setName(empPayrollDTO.getName());
         empData.setSalary(empPayrollDTO.getSalary());
-        employees.set(empId-1,empData);
+        employeeRepository.save(empData);
         return empData;
     }
 
     public void deleteEmployeePayrollData(int empId) {
-        employees.remove(empId-1);
+        employeeRepository.deleteById(empId);
     }
 }
 
