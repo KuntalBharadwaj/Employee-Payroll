@@ -4,10 +4,12 @@ import com.bridgelabz.employee_payroll.dto.EmployeeDTO;
 import com.bridgelabz.employee_payroll.dto.ResponseDTO;
 import com.bridgelabz.employee_payroll.model.Employee;
 import com.bridgelabz.employee_payroll.service.IEmployeePayrollService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,11 @@ public class EmployeePayrollController {
 
     @Autowired
     IEmployeePayrollService employeePayrollService;
+
+    @GetMapping("/csrf")
+    public CsrfToken gettoken(HttpServletRequest http) {
+        return (CsrfToken) http.getAttribute("_csrf");
+    }
 
     @GetMapping(value = {"", "/", "/get"})
     public ResponseEntity<ResponseDTO> getEmployeePayrollData() {
@@ -33,18 +40,15 @@ public class EmployeePayrollController {
         return new ResponseEntity<ResponseDTO>(responseDTO,HttpStatus.OK);
     }
 
-    @PostMapping("/create")
+        @PostMapping("/create")
     public ResponseEntity<ResponseDTO> addEmployeePayrollData(@Valid @RequestBody EmployeeDTO empPayrollDTO) {
-        Employee employee = null;
-        employee = employeePayrollService.createEmployeePayrollData(empPayrollDTO);
+        Employee employee = employeePayrollService.createEmployeePayrollData(empPayrollDTO);
         ResponseDTO responseDTO = new ResponseDTO("created employee data successfully",employee);
         return new ResponseEntity<ResponseDTO>(responseDTO,HttpStatus.OK);
     }
 
     @PutMapping("/update/{empId}")
     public ResponseEntity<ResponseDTO> updateEmployeePayrollData(@PathVariable("empId") int empId,@Valid @RequestBody EmployeeDTO empPayrollDTO) {
-        System.out.println(empId);
-        System.out.println(empPayrollDTO);
         Employee employee = employeePayrollService.updateEmployeePayrollData(empId, empPayrollDTO);
         ResponseDTO responseDTO = new ResponseDTO("Updated employee data successfully",employee);
         return new ResponseEntity<ResponseDTO>(responseDTO,HttpStatus.OK);

@@ -34,7 +34,7 @@ public class EmployeePayrollServiceimpl implements IEmployeePayrollService {
 
     public Employee createEmployeePayrollData(EmployeeDTO empPayrollDTO) {
         try {
-            Employee employee = employee = new Employee(empPayrollDTO);
+            Employee employee = new Employee(empPayrollDTO);
             employeeRepository.save(employee);
             log.info("User Successfully created");
             return employee;
